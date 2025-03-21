@@ -46,7 +46,7 @@ public:
     }
 
     template <typename T>
-    void add_task(const std::function<T>& task)
+    void add_task(T&& task)
     {
         {
             std::unique_lock lk(m_mutex);
@@ -73,9 +73,46 @@ private:
     bool m_ready = false;
 };
 
+void foo()
+{
+    int n = 0;
+    
+    for (int i = 0; i < 10; ++i)
+    {
+        std::cout << "f = " << n++ << ' ';
+    }
+    std::cout << '\n';
+}
+
+void bar()
+{
+    int n = 10;
+    
+    for (int i = 0; i < 20; ++i)
+    {
+        std::cout << "b = " << n++ << ' ';
+    }
+    std::cout << '\n';
+}
+
+void tar()
+{
+    int n = 20;
+    
+    for (int i = 0; i < 30; ++i)
+    {
+        std::cout << "t = " << n++ << ' ';
+    }
+    std::cout << '\n';
+}
+
 int main()
 {
-    
+    ThreadPool pool(100);
+
+    pool.add_task(foo);
+    pool.add_task(bar);
+    pool.add_task(tar);
 
     return 0;
 }
